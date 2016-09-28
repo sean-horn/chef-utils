@@ -203,13 +203,14 @@ end
 
 # Collect redis stats
 def get_redis_stats(services)
-  return {} unless services.include?('opscode-authz')
+#  return {} unless services.include?('opscode-authz')
   # Pull interesting stats by using /opt/opscode/embedded/bin/redis-cli info
   _safe_get(__method__) do
     stats = {}
     single_keys = %w{keyspace_hits: keyspace_misses: used_memory:}
 
-    s = Mixlib::ShellOut.new('/opt/opscode/embedded/bin/redis-cli info')
+password = "04af5755537b3feb334ec9308e9110fe5a5bb917b12c7e80a5e48b39c5e480e2089be0812459949d4abb27481ed5ed53d455"
+    s = Mixlib::ShellOut.new("/opt/opscode/embedded/bin/redis-cli -a \"#{password}\" -p 16379 info")
     lines = s.run_command.stdout.split
     lines.each do |line|
       next if line.empty?
